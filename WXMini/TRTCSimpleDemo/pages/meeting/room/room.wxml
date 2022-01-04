@@ -4,7 +4,7 @@
       <view id="grid-container-id" class="grid-container">
           <!--<view class="view-container pusher-container {{playerList.length===0? 'fullscreen':''}} {{playerList.length===1? 'one-player':''}}">-->
           <view class="view-container pusher-container {{hide_player? 'fullscreen':''}} {{playerList.length===1? 'one-player':''}}">
-            <view wx:if="{{hide_pusher}}">
+            <view wx:if="{{!hide_pusher}}">
             <live-pusher
                     class="pusher"
                     url="{{pusher.url}}"

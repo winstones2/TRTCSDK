@@ -13,7 +13,7 @@ Page({
     localAudio: false,
     localVideo: false,
     hide_player: false,
-    hide_pusher: false
+    hide_pusher: true
   },
 
   /**
@@ -61,8 +61,7 @@ Page({
       pusher: pusher.pusherAttributes,
       localAudio: options.localAudio,
       localVideo: options.localVideo,
-      hide_player: false,
-
+      hide_player: false
     })
   },
 
@@ -233,6 +232,9 @@ Page({
     if (this.data.pusher.enableCamera) {
       this.setPusherAttributesHandler({ enableCamera: false })
     } else {
+      this.setData({
+        hide_pusher: false
+      })
       this.setPusherAttributesHandler({ enableCamera: true })
     }
   },
