@@ -6,6 +6,7 @@ import { genTestUserSig } from '../../debug/GenerateTestUserSig'
 const app = getApp()
 Page({
   data: {
+    userName: randomUserID(),
     roomID: '',
     headerHeight: app.globalData.headerHeight,
     statusBarHeight: app.globalData.statusBarHeight,
@@ -21,11 +22,19 @@ Page({
       roomID: event.detail.value,
     })
   },
+  enterUserName(event) {
+    this.setData({
+      userName: event.detail.value,
+    })
+  },
   enterRoom() {
-    const { roomID, localVideo, localAudio } = this.data
+    const { userName, roomID, localVideo, localAudio } = this.data
     const nowTime = new Date()
     if (nowTime - this.tapTime < 1000) {
       return
+    }
+    if (!userName) {
+      userName=randomUserID()
     }
     if (!roomID) {
       wx.showToast({
@@ -51,9 +60,9 @@ Page({
       })
       return
     }
-    const userID = randomUserID()
+    const userID = userName
     const Signature = genTestUserSig(userID)
-    const url = `./room/room?roomID=${roomID}&localVideo=${localVideo}&localAudio=${localAudio}&userID=${userID}&sdkAppID=${Signature.sdkAppID}&userSig=${Signature.userSig}`
+    const url = `./room/room?&roomID=${roomID}&localVideo=${localVideo}&localAudio=${localAudio}&userID=${userID}&sdkAppID=${Signature.sdkAppID}&userSig=${Signature.userSig}`
     this.tapTime = nowTime
     this.checkDeviceAuthorize().then((result) => {
       console.log('授权成功', result)

@@ -4,6 +4,9 @@
     <view>多人会议</view>
   </view>
   <view class="input-box">
+    <input type="text" value="{{userName}}" maxlength="10" bindinput='enterUserName' placeholder="请输入用户名" placeholder-style="color:#ffffff;opacity: 0.55;"/>
+  </view>
+  <view class="input-box">
     <input type="number" value="{{roomID}}" maxlength="10" bindinput='enterRoomID' placeholder="请输入房间号" placeholder-style="color:#ffffff;opacity: 0.55;"/>
   </view>
   <view class="choice-content">

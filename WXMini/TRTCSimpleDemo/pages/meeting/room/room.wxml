@@ -2,13 +2,15 @@
   <view class="column-layout">
     <view class="column-1">
       <view id="grid-container-id" class="grid-container">
-          <view class="view-container pusher-container {{playerList.length===0? 'fullscreen':''}} {{playerList.length===1? 'one-player':''}}">
+          <!--<view class="view-container pusher-container {{playerList.length===0? 'fullscreen':''}} {{playerList.length===1? 'one-player':''}}">-->
+          <view class="view-container pusher-container {{hide_player? 'fullscreen':''}} {{playerList.length===1? 'one-player':''}}">
+            <view wx:if="{{hide_pusher}}">
             <live-pusher
                     class="pusher"
                     url="{{pusher.url}}"
-                    mode="{{pusher.mode}}"
+                    mode="SD"
                     autopush="{{pusher.autopush}}"
-                    enable-camera="{{pusher.enableCamera}}"
+                    enable-camera="false"
                     enable-mic="{{pusher.enableMic}}"
                     muted="{{!pusher.enableMic}}"
                     enable-agc="{{pusher.enableAgc}}"
@@ -16,8 +18,8 @@
                     enable-ear-monitor="{{pusher.enableEarMonitor}}"
                     auto-focus="{{pusher.enableAutoFocus}}"
                     zoom="{{pusher.enableZoom}}"
-                    min-bitrate="{{pusher.minBitrate}}"
-                    max-bitrate="{{pusher.maxBitrate}}"
+                    min-bitrate="200"
+                    max-bitrate="500"
                     video-width="{{pusher.videoWidth}}"
                     video-height="{{pusher.videoHeight}}"
                     beauty="{{pusher.beautyLevel}}"
@@ -43,6 +45,7 @@
                     bindbgmcomplete="_pusherBGMCompleteHandler"
                     bindaudiovolumenotify="_pusherAudioVolumeNotify"
             />
+            </view>
             <view class="no-video" wx:if="{{!pusher.enableCamera}}">
               <image class="image" src="../../../static/images/mute-camera-white.png"></image>
             </view>
@@ -56,66 +59,69 @@
                </view>
              </view>
           </view>
-          <view wx:for="{{playerList}}"
-                wx:key="streamID"
-                class="view-container player-container {{playerList.length===1? 'one-player':''}}"
-                id="{{'player-'+item.streamID}}"
-                data-userid="{{item.userID}}"
-                data-streamtype="{{item.streamType}}"
-                bindtap="_doubleTabToggleFullscreen">
-            <live-player
-                    class="player"
-                    id="{{item.id}}"
-                    data-userid="{{item.userID}}"
-                    data-streamid="{{item.streamID}}"
-                    data-streamtype="{{item.streamType}}"
-                    src= "{{item.src}}"
-                    mode= "RTC"
-                    autoplay= "{{item.autoplay}}"
-                    mute-audio= "{{item.muteAudio}}"
-                    mute-video= "{{item.muteVideo}}"
-                    orientation= "{{item.orientation}}"
-                    object-fit= "{{item.objectFit}}"
-                    background-mute= "{{item.enableBackgroundMute}}"
-                    min-cache= "{{item.minCache}}"
-                    max-cache= "{{item.maxCache}}"
-                    sound-mode= "{{item.soundMode}}"
-                    enable-recv-message= "{{item.enableRecvMessage}}"
-                    auto-pause-if-navigate= "{{item.autoPauseIfNavigate}}"
-                    auto-pause-if-open-native= "{{item.autoPauseIfOpenNative}}"
-                    debug="{{debug}}"
-                    bindstatechange="_playerStateChange"
-                    bindfullscreenchange="_playerFullscreenChange"
-                    bindnetstatus="_playerNetStatus"
-                    bindaudiovolumenotify="_playerAudioVolumeNotify"
-            />
-            <view class="no-video" wx:if="{{item.muteVideo}}">
-              <image class="image" src="../../../static/images/display-pause-white.png"></image>
-              <view class="text">
-                <p>{{item.userID}}</p>
+
+          <view wx:if="{{!hide_player}}">            
+            <view wx:for="{{playerList}}"
+                  wx:key="streamID"
+                  class="view-container player-container {{playerList.length===1? 'one-player':''}}"
+                  id="{{'player-'+item.streamID}}"
+                  data-userid="{{item.userID}}"
+                  data-streamtype="{{item.streamType}}"
+                  bindtap="_doubleTabToggleFullscreen">
+              <live-player
+                      class="player"
+                      id="{{item.id}}"
+                      data-userid="{{item.userID}}"
+                      data-streamid="{{item.streamID}}"
+                      data-streamtype="{{item.streamType}}"
+                      src= "{{item.src}}"
+                      mode= "RTC"
+                      autoplay= "{{item.autoplay}}"
+                      mute-audio= "{{item.muteAudio}}"
+                      mute-video= "{{item.muteVideo}}"
+                      orientation= "{{item.orientation}}"
+                      object-fit= "{{item.objectFit}}"
+                      background-mute= "{{item.enableBackgroundMute}}"
+                      min-cache= "{{item.minCache}}"
+                      max-cache= "{{item.maxCache}}"
+                      sound-mode= "{{item.soundMode}}"
+                      enable-recv-message= "{{item.enableRecvMessage}}"
+                      auto-pause-if-navigate= "{{item.autoPauseIfNavigate}}"
+                      auto-pause-if-open-native= "{{item.autoPauseIfOpenNative}}"
+                      debug="{{debug}}"
+                      bindstatechange="_playerStateChange"
+                      bindfullscreenchange="_playerFullscreenChange"
+                      bindnetstatus="_playerNetStatus"
+                      bindaudiovolumenotify="_playerAudioVolumeNotify"
+              />
+              <view class="no-video" wx:if="{{item.muteVideo}}">
+                <image class="image" src="../../../static/images/display-pause-white.png"></image>
+                <view class="text">
+                  <p>{{item.userID}}</p>
+                </view>
               </view>
-            </view>
-            <view class="no-video" wx:if="{{!item.hasVideo && !item.muteVideo}}">
-              <image class="image" src="../../../static/images/mute-camera-white.png"></image>
-              <view class="text">
-                <p>{{item.userID}}</p>
+              <view class="no-video" wx:if="{{!item.hasVideo && !item.muteVideo}}">
+                <image class="image" src="../../../static/images/mute-camera-white.png"></image>
+                <view class="text">
+                  <p>{{item.userID}}</p>
+                </view>
+                <view class="text">
+                  <p>对方摄像头未打开</p>
+                </view>
               </view>
-              <view class="text">
-                <p>对方摄像头未打开</p>
+              <view class="no-audio" wx:if="{{!item.hasAudio}}">
+                <image class="image" src="../../../static/images/mute-mic-white.png"></image>
               </view>
-            </view>
-            <view class="no-audio" wx:if="{{!item.hasAudio}}">
-              <image class="image" src="../../../static/images/mute-mic-white.png"></image>
-            </view>
-            <view class="audio-volume" wx:if="{{item.hasAudio}}">
-              <image class="image" src="../../../static/images/micro-open.png"></image>
-              <view class="audio-active" style="height:{{item.volume}}%">
-                <image class="image" src="../../../static/images/audio-active.png"></image>
+              <view class="audio-volume" wx:if="{{item.hasAudio}}">
+                <image class="image" src="../../../static/images/micro-open.png"></image>
+                <view class="audio-active" style="height:{{item.volume}}%">
+                  <image class="image" src="../../../static/images/audio-active.png"></image>
+                </view>
               </view>
-            </view>
-            <view class="sub-box">
-              <image class="audio-image" bindtap="_mutePlayerAudio" data-value="{{item}}" src="{{item.muteAudio? '../../../static/images/mute-mic-white.png': '../../../static/images/micro-open.png'}} "></image>
-              <image class="audio-image" bindtap="_mutePlayerVideo" data-value="{{item}}" src="{{item.muteVideo? '../../../static/images/mute-camera-white.png': '../../../static/images/camera.png'}} "></image>
+              <view class="sub-box">
+                <image class="audio-image" bindtap="_mutePlayerAudio" data-value="{{item}}" src="{{item.muteAudio? '../../../static/images/mute-mic-white.png': '../../../static/images/micro-open.png'}} "></image>
+                <image class="audio-image" bindtap="_mutePlayerVideo" data-value="{{item}}" src="{{item.muteVideo? '../../../static/images/mute-camera-white.png': '../../../static/images/camera.png'}} "></image>
+              </view>
             </view>
           </view>
         </view>

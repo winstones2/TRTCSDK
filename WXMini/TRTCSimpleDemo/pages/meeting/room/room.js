@@ -11,7 +11,9 @@ Page({
     playerList: [],
     show_memberList: false,
     localAudio: false,
-    localVideo: false
+    localVideo: false,
+    hide_player: false,
+    hide_pusher: false
   },
 
   /**
@@ -58,7 +60,9 @@ Page({
       },
       pusher: pusher.pusherAttributes,
       localAudio: options.localAudio,
-      localVideo: options.localVideo
+      localVideo: options.localVideo,
+      hide_player: false,
+
     })
   },
 
